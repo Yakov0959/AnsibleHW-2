@@ -1,0 +1,39 @@
+---
+    - name: Install prerequisites
+      apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+
+    - name: Install LAMP & Git Packages
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'apache2', 'python3-pymysql', 'php', 'php-mysql', 'libapache2-mod-php', 'git' ]
+
+    - name: Clone a github repository
+      git:
+        repo: https://github.com/FaztWeb/php-mysql-crud.git
+        dest: /var/www/html/{{ http_host }}/
+        clone: yes
+        update: yes
+
+
+    - name: Set up Apache VirtualHost
+      template:
+        src: "files/apache.conf.j2"
+        dest: "/etc/apache2/sites-available/{{ http_conf }}"
+      notify: Reload Apache
+
+    - name: Enable new site
+      shell: /usr/sbin/a2ensite {{ http_conf }}
+      notify: Reload Apache
+
+  # UFW Configuration
+    - name: "UFW - Allow HTTP on port {{ http_port }}"
+      ufw:
+        rule: allow
+        port: "{{ http_port }}"
+        proto: tcp
+
+
+
+
+
+
+

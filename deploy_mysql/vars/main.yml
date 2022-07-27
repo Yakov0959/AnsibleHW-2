@@ -1,0 +1,4 @@
+#MySQL Settings
+mysql_password: "password"
+#remote_db_host_ip: "192.168.0.60"
+mysql_bind_address: "0.0.0.0"

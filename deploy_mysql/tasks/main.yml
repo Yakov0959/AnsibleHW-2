@@ -1,0 +1,33 @@
+---
+    - name: Install_mysql
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'mysql-server', 'python-mysqldb' ]
+
+    - name: config mysql
+      template:
+        src: "files/mysqld.j2"
+        dest: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+
+    - name: db setting
+      template:
+        src: "files/db.j2"
+        dest: "/var/www/html/{{ http_host }}/db.php"
+
+    - name: Create table
+      mysql_db:
+        name: php-mysql-crud
+        state: import
+        target: "/var/www/html/{{ http_host }}/database/script.sql"
+
+    - name: Update mysql password for superuser
+      mysql_user:
+      # Update the superuser to have all grants and a password
+        name: "root"
+        host: localhost
+        password: "{{ mysql_password }}"
+        priv: "*.*:ALL,GRANT"
+
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted

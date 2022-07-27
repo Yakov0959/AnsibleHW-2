@@ -1,0 +1,9 @@
+---
+#HTTP Settings
+http_host: "mydomain"
+http_conf: "mydomain.conf"
+http_port: "80"
+
+#MySQL Settings
+mysql_password: "password"
+mysql_bind_address: "0.0.0.0"

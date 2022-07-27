@@ -1,0 +1,15 @@
+---
+- hosts: all
+  vars_files:
+    - vars/default.yml
+  become: true
+
+  roles:
+    - deploy_lamp
+    - deploy_mysql
+
+
+
+
+
+
